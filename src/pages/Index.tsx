@@ -6,9 +6,11 @@ import { Mic, Volume2, Sparkles, Users, Trophy, Heart, Eye, Ear, Brain, Hand, Gr
 import heroBackground from '@/assets/hero-background.jpg';
 import { animals } from '@/lib/animal_data';
 import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 
 const Index = () => {
   const navigate = useNavigate();
+  const learningSectionRef = useRef<HTMLDivElement | null>(null);
   const previewAnimals = animals.slice(0, 4);
 
   const features = [
@@ -74,7 +76,7 @@ const Index = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="xl" className="animate-bounce-gentle">
+            <Button variant="hero" size="xl" className="animate-bounce-gentle" onClick={() => learningSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}>
               <Sparkles className="w-6 h-6" />
               Start Playing Now
             </Button>
@@ -103,7 +105,7 @@ const Index = () => {
 
       {/* Demo Section */}
       <main id="main-content">
-        <section className="py-20 px-6" aria-label="Animal Learning Activities">
+        <section ref={learningSectionRef} className="py-20 px-6" aria-label="Animal Learning Activities">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-5xl font-bold text-primary mb-6">

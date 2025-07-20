@@ -11,7 +11,7 @@ export const animals: AnimalData[] = [
   { name: 'Elephant', sound: 'trumpet', emoji: '🐘', audio: '/audios/animals/elephant.mp3' },
   { name: 'Tiger', sound: 'roar', emoji: '🐯', audio: '/audios/animals/tiger.mp3' },
   { name: 'Horse', sound: 'neigh', emoji: '🐴', audio: '/audios/animals/horse.mp3' },
-  { name: 'Donkey', sound: 'hee-haw', emoji: '🫏', audio: '/audios/animals/donkey.mp3' },
+  { name: 'Gull', sound: 'screech', emoji: '🕊️', audio: '/audios/animals/gull.mp3' },
   { name: 'Cow', sound: 'moo', emoji: '🐄', audio: '/audios/animals/cow.mp3' },
   { name: 'Goat', sound: 'baa', emoji: '🐐', audio: '/audios/animals/goat.mp3' },
   { name: 'Sheep', sound: 'baa', emoji: '🐑', audio: '/audios/animals/sheep.mp3' },

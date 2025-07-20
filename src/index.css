@@ -191,6 +191,14 @@ All colors MUST be HSL.
   100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes zoom-in-out-slow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.animate-zoom-in-out-slow {
+  animation: zoom-in-out-slow 2.5s infinite;
+}
+
 /* Accessibility Modes */
 .high-contrast {
   --background: 0 0% 100%;

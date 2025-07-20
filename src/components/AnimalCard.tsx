@@ -16,11 +16,33 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
   const [attempts, setAttempts] = useState(0);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const progressRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Helper to get durations
+  const getAnnouncementDuration = () =>  trainingMode ? 1800 : 1500; // ms, rough estimate
+  const getAudioDuration = () => (audioRef.current?.duration ? audioRef.current.duration * 1000 : 2000); // ms
 
   const playSound = () => {
     setIsPlaying(true);
     setRecognitionResult(null);
+    setProgress(0);
+    let totalDuration = getAnnouncementDuration();
+    if (audioRef.current) {
+      totalDuration += audioRef.current.duration ? audioRef.current.duration * 1000 : 2000;
+    }
+    // Animate progress
+    let start = Date.now();
+    if (progressRef.current) clearInterval(progressRef.current);
+    progressRef.current = setInterval(() => {
+      const elapsed = Date.now() - start;
+      setProgress(Math.min(100, (elapsed / totalDuration) * 100));
+      if (elapsed >= totalDuration) {
+        setProgress(100);
+        clearInterval(progressRef.current!);
+      }
+    }, 50);
     // Announce for screen readers first
     if ('speechSynthesis' in window) {
       const announcement = trainingMode
@@ -46,10 +68,15 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
 
   useEffect(() => {
     if (!audioRef.current) return;
-    const handleEnded = () => setIsPlaying(false);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setProgress(100);
+      if (progressRef.current) clearInterval(progressRef.current);
+    };
     audioRef.current.addEventListener('ended', handleEnded);
     return () => {
       audioRef.current?.removeEventListener('ended', handleEnded);
+      if (progressRef.current) clearInterval(progressRef.current);
     };
   }, []);
 
@@ -122,6 +149,14 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
               {isPlaying ? 'Playing...' : 'Play Sound'}
             </Button>
           </div>
+          {isPlaying && (
+            <div className="w-full h-2 bg-gray-200 rounded mt-2 overflow-hidden">
+              <div
+                className="h-2 bg-primary transition-all duration-100 linear"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          )}
           
           {!trainingMode && (
             <div className="flex justify-center">

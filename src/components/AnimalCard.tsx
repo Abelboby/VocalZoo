@@ -9,9 +9,12 @@ interface AnimalCardProps {
   emoji: string;
   audio: string;
   trainingMode?: boolean;
+  autoPlay?: boolean;
+  progressOverride?: number;
+  onReplay?: () => void;
 }
 
-export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCardProps) => {
+export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay }: AnimalCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
@@ -112,6 +115,9 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
     }, 3000);
   };
 
+  // Use progressOverride if provided (slideshow mode)
+  const progressValue = typeof progressOverride === 'number' ? progressOverride : progress;
+
   return (
     <div 
       className="glass-card hover:scale-105 transition-all duration-300 animate-scale-in focus-within:ring-4 focus-within:ring-primary/50"
@@ -139,21 +145,21 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
             <Button
               variant="playful"
               size="lg"
-              onClick={playSound}
-              disabled={isPlaying}
-              className={`${isPlaying ? 'animate-pulse' : ''} min-w-[140px] text-lg`}
+              onClick={autoPlay && onReplay ? onReplay : playSound}
+              disabled={autoPlay ? false : isPlaying}
+              className={`${isPlaying && !autoPlay ? 'animate-pulse' : ''} min-w-[140px] text-lg`}
               aria-label={`Play ${name} sound - ${sound}`}
               aria-describedby={`${name}-instructions`}
             >
               <Volume2 className="w-6 h-6" />
-              {isPlaying ? 'Playing...' : 'Play Sound'}
+              {autoPlay ? 'Play Again' : isPlaying ? 'Playing...' : 'Play Sound'}
             </Button>
           </div>
-          {isPlaying && (
+          {(isPlaying || autoPlay) && (
             <div className="w-full h-2 bg-gray-200 rounded mt-2 overflow-hidden">
               <div
                 className="h-2 bg-primary transition-all duration-100 linear"
-                style={{ width: `${progress}%` }}
+                style={{ width: `${progressValue}%` }}
               />
             </div>
           )}

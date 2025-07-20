@@ -102,7 +102,9 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
         </div>
         <h3 className="text-2xl font-bold text-primary">{name}</h3>
         <p className="text-muted-foreground text-lg">
-          Step 1: Listen to the {name} sound. Step 2: Say "{name}" clearly.
+          {trainingMode
+            ? `Press Play Sound to hear what a ${name} sounds like.`
+            : `Step 1: Listen to the ${name} sound. Step 2: Say "${name}" clearly.`}
         </p>
         
         <div className="space-y-4">
@@ -121,22 +123,24 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCa
             </Button>
           </div>
           
-          <div className="flex justify-center">
-            <Button
-              variant="glass"
-              size="lg"
-              onClick={startListening}
-              disabled={isListening || isPlaying}
-              className={
-                `${isListening ? 'animate-pulse bg-accent/30' : 'text-primary font-semibold'} min-w-[140px] text-lg disabled:text-gray-700 disabled:bg-gray-100 disabled:opacity-100`
-              }
-              aria-label={`Start voice recognition to say ${name}`}
-              aria-describedby={`${name}-listening-status`}
-            >
-              <Mic className="w-6 h-6" />
-              {isListening ? 'Listening...' : 'Speak Now'}
-            </Button>
-          </div>
+          {!trainingMode && (
+            <div className="flex justify-center">
+              <Button
+                variant="glass"
+                size="lg"
+                onClick={startListening}
+                disabled={isListening || isPlaying}
+                className={
+                  `${isListening ? 'animate-pulse bg-accent/30' : 'text-primary font-semibold'} min-w-[140px] text-lg disabled:text-gray-700 disabled:bg-gray-100 disabled:opacity-100`
+                }
+                aria-label={`Start voice recognition to say ${name}`}
+                aria-describedby={`${name}-listening-status`}
+              >
+                <Mic className="w-6 h-6" />
+                {isListening ? 'Listening...' : 'Speak Now'}
+              </Button>
+            </div>
+          )}
         </div>
         
         <div id={`${name}-instructions`} className="sr-only">

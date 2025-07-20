@@ -145,6 +145,11 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
       const success = transcript.includes(animalName);
       // If 3rd attempt and user says 'next', skip
       if (examAutomation && attempts >= 2 && transcript.includes('next')) {
+        if ('speechSynthesis' in window) {
+          const skipUtterance = new SpeechSynthesisUtterance('Skipping.');
+          skipUtterance.rate = 0.8;
+          speechSynthesis.speak(skipUtterance);
+        }
         if (onResult) onResult('retry');
         return;
       }

@@ -36,28 +36,32 @@ export const AnimalCard = ({ name, sound, emoji }: AnimalCardProps) => {
           Listen to the sound and say the animal name!
         </p>
         
-        <div className="flex gap-4 justify-center">
-          <Button
-            variant="playful"
-            size="lg"
-            onClick={playSound}
-            disabled={isPlaying}
-            className={isPlaying ? 'animate-pulse' : ''}
-          >
-            <Volume2 className="w-5 h-5" />
-            {isPlaying ? 'Playing...' : 'Play Sound'}
-          </Button>
+        <div className="space-y-4">
+          <div className="flex justify-center">
+            <Button
+              variant="playful"
+              size="lg"
+              onClick={playSound}
+              disabled={isPlaying}
+              className={isPlaying ? 'animate-pulse' : ''}
+            >
+              <Volume2 className="w-5 h-5" />
+              {isPlaying ? 'Playing...' : 'Play Sound'}
+            </Button>
+          </div>
           
-          <Button
-            variant="glass"
-            size="lg"
-            onClick={startListening}
-            disabled={isListening}
-            className={isListening ? 'animate-pulse bg-accent/30' : ''}
-          >
-            <Mic className="w-5 h-5" />
-            {isListening ? 'Listening...' : 'Speak Now'}
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              variant="glass"
+              size="lg"
+              onClick={startListening}
+              disabled={isListening}
+              className={isListening ? 'animate-pulse bg-accent/30' : ''}
+            >
+              <Mic className="w-5 h-5" />
+              {isListening ? 'Listening...' : 'Speak Now'}
+            </Button>
+          </div>
         </div>
         
         {isListening && (

@@ -11,6 +11,7 @@ const Classroom = () => {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
   const [canReplay, setCanReplay] = useState(false);
+  const [phase, setPhase] = useState<'announcement' | 'audio' | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -23,23 +24,23 @@ const Classroom = () => {
       setCurrent(0);
       setProgress(0);
       setCanReplay(false);
+      setPhase(null);
       return;
     }
     setCurrent(index);
     setProgress(0);
     setCanReplay(false);
-    let totalDuration = getAnnouncementDuration();
-    if (audioRef.current) {
-      totalDuration += audioRef.current.duration ? audioRef.current.duration * 1000 : 2000;
-    }
-    // Animate progress
+    setPhase('announcement');
+    const announcementDuration = getAnnouncementDuration();
+    // Animate progress for announcement phase
     let start = Date.now();
     if (timeoutRef.current) clearInterval(timeoutRef.current);
     timeoutRef.current = setInterval(() => {
       const elapsed = Date.now() - start;
-      setProgress(Math.min(100, (elapsed / totalDuration) * 100));
-      if (elapsed >= totalDuration) {
-        setProgress(100);
+      const split = announcementDuration / (announcementDuration + (audioRef.current?.duration ? audioRef.current.duration * 1000 : 2000));
+      setProgress(Math.min(100 * (elapsed / announcementDuration) * split, 100 * split));
+      if (elapsed >= announcementDuration) {
+        setProgress(100 * split);
         clearInterval(timeoutRef.current!);
       }
     }, 50);
@@ -48,11 +49,22 @@ const Classroom = () => {
       const utterance = new SpeechSynthesisUtterance(`This is the ${animals[index].name} sound`);
       utterance.rate = 0.9;
       utterance.onend = () => {
+        setPhase('audio');
         if (audioRef.current) {
           audioRef.current.src = animals[index].audio;
+          audioRef.current.currentTime = 0;
           audioRef.current.onended = () => {
             setCanReplay(true);
+            setPhase(null);
+            setProgress(100);
             timeoutRef.current = setTimeout(() => runSlideshow(index + 1), 2000);
+          };
+          audioRef.current.ontimeupdate = () => {
+            const split = announcementDuration / (announcementDuration + (audioRef.current?.duration ? audioRef.current.duration * 1000 : 2000));
+            if (audioRef.current && audioRef.current.duration) {
+              const audioProgress = audioRef.current.currentTime / audioRef.current.duration;
+              setProgress(split * 100 + (1 - split) * 100 * audioProgress);
+            }
           };
           audioRef.current.play();
         }
@@ -60,11 +72,22 @@ const Classroom = () => {
       speechSynthesis.speak(utterance);
     } else {
       // Fallback: just play audio
+      setPhase('audio');
       if (audioRef.current) {
         audioRef.current.src = animals[index].audio;
+        audioRef.current.currentTime = 0;
         audioRef.current.onended = () => {
           setCanReplay(true);
+          setPhase(null);
+          setProgress(100);
           timeoutRef.current = setTimeout(() => runSlideshow(index + 1), 2000);
+        };
+        audioRef.current.ontimeupdate = () => {
+          const split = announcementDuration / (announcementDuration + (audioRef.current?.duration ? audioRef.current.duration * 1000 : 2000));
+          if (audioRef.current && audioRef.current.duration) {
+            const audioProgress = audioRef.current.currentTime / audioRef.current.duration;
+            setProgress(split * 100 + (1 - split) * 100 * audioProgress);
+          }
         };
         audioRef.current.play();
       }
@@ -76,6 +99,7 @@ const Classroom = () => {
     setCurrent(0);
     setProgress(0);
     setCanReplay(false);
+    setPhase(null);
     runSlideshow(0);
   };
 
@@ -84,6 +108,7 @@ const Classroom = () => {
     setCurrent(0);
     setProgress(0);
     setCanReplay(false);
+    setPhase(null);
     if (audioRef.current) audioRef.current.pause();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
@@ -91,6 +116,7 @@ const Classroom = () => {
   const replayCurrent = () => {
     setProgress(0);
     setCanReplay(false);
+    setPhase(null);
     runSlideshow(current);
   };
 

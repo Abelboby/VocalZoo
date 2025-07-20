@@ -13,9 +13,10 @@ interface AnimalCardProps {
   progressOverride?: number;
   onReplay?: () => void;
   playButtonDisabled?: boolean;
+  onResult?: (result: 'success' | 'retry') => void; // <-- add this
 }
 
-export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay, playButtonDisabled }: AnimalCardProps) => {
+export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay, playButtonDisabled, onResult }: AnimalCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
@@ -121,6 +122,7 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
       const animalName = name.trim().toLowerCase();
       const success = transcript.includes(animalName);
       setRecognitionResult(success ? 'success' : 'retry');
+      if (onResult) onResult(success ? 'success' : 'retry');
       // Audio feedback
       const feedback = success
         ? `Great job! You said ${name} correctly!`

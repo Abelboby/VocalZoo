@@ -55,7 +55,7 @@ const Index = () => {
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <div className="animate-float">
             <h1 className="text-6xl md:text-8xl font-bold text-white mb-6">
-              Koode
+              Vocal <span className="text-gradient">Zoo</span>
             </h1>
           </div>
           
@@ -121,7 +121,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-primary mb-6">
-              Why Kids Love Koode
+              Why Kids Love Vocal Zoo
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Educational technology that makes learning fun, interactive, and magical!
@@ -147,7 +147,7 @@ const Index = () => {
               Ready for an Audio Adventure?
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join thousands of children already learning and having fun with Koode!
+              Join thousands of children already learning and having fun with Vocal Zoo!
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

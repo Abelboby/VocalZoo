@@ -10,6 +10,7 @@ const Classroom = () => {
   const [slideshow, setSlideshow] = useState(false);
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [canReplay, setCanReplay] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -21,10 +22,12 @@ const Classroom = () => {
       setSlideshow(false);
       setCurrent(0);
       setProgress(0);
+      setCanReplay(false);
       return;
     }
     setCurrent(index);
     setProgress(0);
+    setCanReplay(false);
     let totalDuration = getAnnouncementDuration();
     if (audioRef.current) {
       totalDuration += audioRef.current.duration ? audioRef.current.duration * 1000 : 2000;
@@ -48,6 +51,7 @@ const Classroom = () => {
         if (audioRef.current) {
           audioRef.current.src = animals[index].audio;
           audioRef.current.onended = () => {
+            setCanReplay(true);
             timeoutRef.current = setTimeout(() => runSlideshow(index + 1), 2000);
           };
           audioRef.current.play();
@@ -59,6 +63,7 @@ const Classroom = () => {
       if (audioRef.current) {
         audioRef.current.src = animals[index].audio;
         audioRef.current.onended = () => {
+          setCanReplay(true);
           timeoutRef.current = setTimeout(() => runSlideshow(index + 1), 2000);
         };
         audioRef.current.play();
@@ -70,6 +75,7 @@ const Classroom = () => {
     setSlideshow(true);
     setCurrent(0);
     setProgress(0);
+    setCanReplay(false);
     runSlideshow(0);
   };
 
@@ -77,12 +83,14 @@ const Classroom = () => {
     setSlideshow(false);
     setCurrent(0);
     setProgress(0);
+    setCanReplay(false);
     if (audioRef.current) audioRef.current.pause();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const replayCurrent = () => {
     setProgress(0);
+    setCanReplay(false);
     runSlideshow(current);
   };
 
@@ -130,7 +138,7 @@ const Classroom = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <AnimalCard {...animals[current]} trainingMode autoPlay progressOverride={progress} onReplay={replayCurrent} />
+            <AnimalCard {...animals[current]} trainingMode autoPlay progressOverride={progress} onReplay={replayCurrent} playButtonDisabled={!canReplay} />
             <div className="mt-6 text-lg text-primary font-semibold">{`Now playing: ${animals[current].name}`}</div>
           </div>
         )}

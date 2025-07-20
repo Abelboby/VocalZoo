@@ -12,9 +12,10 @@ interface AnimalCardProps {
   autoPlay?: boolean;
   progressOverride?: number;
   onReplay?: () => void;
+  playButtonDisabled?: boolean;
 }
 
-export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay }: AnimalCardProps) => {
+export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay, playButtonDisabled }: AnimalCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
@@ -146,7 +147,7 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
               variant="playful"
               size="lg"
               onClick={autoPlay && onReplay ? onReplay : playSound}
-              disabled={autoPlay ? false : isPlaying}
+              disabled={autoPlay ? !!playButtonDisabled : isPlaying}
               className={`${isPlaying && !autoPlay ? 'animate-pulse' : ''} min-w-[140px] text-lg`}
               aria-label={`Play ${name} sound - ${sound}`}
               aria-describedby={`${name}-instructions`}

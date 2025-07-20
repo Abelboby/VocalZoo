@@ -97,6 +97,7 @@ const ExamRoom = () => {
               autoPlay
               onResult={waiting ? undefined : handleResult}
               playButtonDisabled={waiting}
+              examAutomation={true}
             />
             <div className="mt-6 text-lg text-primary font-semibold">{`Question ${current + 1} of ${animals.length}`}</div>
             <div className="mt-2 text-md text-muted-foreground">Score: {score}</div>

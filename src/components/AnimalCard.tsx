@@ -14,9 +14,10 @@ interface AnimalCardProps {
   onReplay?: () => void;
   playButtonDisabled?: boolean;
   onResult?: (result: 'success' | 'retry') => void; // <-- add this
+  examAutomation?: boolean;
 }
 
-export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay, playButtonDisabled, onResult }: AnimalCardProps) => {
+export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, progressOverride, onReplay, playButtonDisabled, onResult, examAutomation }: AnimalCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
@@ -85,13 +86,34 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
     };
   }, []);
 
+  useEffect(() => {
+    if (examAutomation) {
+      playSound();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [examAutomation, name]);
+
+  useEffect(() => {
+    if (!examAutomation) return;
+    if (!isPlaying && progress === 100) {
+      // Wait a short moment, then start listening
+      const listenTimeout = setTimeout(() => {
+        startListening();
+      }, 400);
+      return () => clearTimeout(listenTimeout);
+    }
+  }, [isPlaying, progress, examAutomation]);
+
   const startListening = () => {
     setIsListening(true);
     setRecognitionResult(null);
     setAttempts(prev => prev + 1);
 
     // Announce for screen readers
-    const announcement = 'Guess the animal sound.';
+    let announcement = 'Guess the animal sound.';
+    if (examAutomation && attempts >= 2) {
+      announcement += ' If you want to skip this question, say next.';
+    }
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(announcement);
       utterance.rate = 0.8;
@@ -121,12 +143,17 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
       const transcript = event.results[0][0].transcript.trim().toLowerCase();
       const animalName = name.trim().toLowerCase();
       const success = transcript.includes(animalName);
+      // If 3rd attempt and user says 'next', skip
+      if (examAutomation && attempts >= 3 && transcript.includes('next')) {
+        if (onResult) onResult('retry');
+        return;
+      }
       setRecognitionResult(success ? 'success' : 'retry');
       if (onResult) onResult(success ? 'success' : 'retry');
       // Audio feedback
       const feedback = success
         ? `Great job! You said ${name} correctly!`
-        : `Try again! Listen to the ${name} sound and repeat the name clearly.`;
+        : ``;
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(feedback);
         utterance.rate = 0.8;
@@ -153,6 +180,24 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
     };
     recognition.start();
   };
+
+  // Auto-retry logic for examAutomation
+  useEffect(() => {
+    if (
+      examAutomation &&
+      recognitionResult === 'retry' &&
+      attempts < 3
+    ) {
+      // Small delay before retrying
+      const retryTimeout = setTimeout(() => {
+        setRecognitionResult(null);
+        setProgress(0);
+        playSound();
+      }, 900);
+      return () => clearTimeout(retryTimeout);
+    }
+    // No auto-retry if attempts >= 3
+  }, [examAutomation, recognitionResult, attempts]);
 
   // Use progressOverride if provided (slideshow mode)
   const progressValue = typeof progressOverride === 'number' ? progressOverride : progress;
@@ -181,18 +226,20 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
         
         <div className="space-y-4">
           <div className="flex justify-center">
-            <Button
-              variant="playful"
-              size="lg"
-              onClick={autoPlay && onReplay ? onReplay : playSound}
-              disabled={autoPlay ? !!playButtonDisabled : isPlaying}
-              className={`${isPlaying && !autoPlay ? 'animate-pulse' : ''} min-w-[140px] text-lg`}
-              aria-label={`Play ${name} sound - ${sound}`}
-              aria-describedby={`${name}-instructions`}
-            >
-              <Volume2 className="w-6 h-6" />
-              {autoPlay ? 'Play Again' : isPlaying ? 'Playing...' : 'Play Sound'}
-            </Button>
+            {!examAutomation && (
+              <Button
+                variant="playful"
+                size="lg"
+                onClick={autoPlay && onReplay ? onReplay : playSound}
+                disabled={autoPlay ? !!playButtonDisabled : isPlaying}
+                className={`${isPlaying && !autoPlay ? 'animate-pulse' : ''} min-w-[140px] text-lg`}
+                aria-label={`Play ${name} sound - ${sound}`}
+                aria-describedby={`${name}-instructions`}
+              >
+                <Volume2 className="w-6 h-6" />
+                {autoPlay ? 'Play Again' : isPlaying ? 'Playing...' : 'Play Sound'}
+              </Button>
+            )}
           </div>
           {(isPlaying || autoPlay) && (
             <div className="w-full h-2 bg-gray-200 rounded mt-2 overflow-hidden">
@@ -205,12 +252,13 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
           
           {!trainingMode && (
             <div className="flex justify-center">
-              <Button
-                variant="glass"
-                size="lg"
-                onClick={startListening}
-                disabled={isListening || isPlaying}
-                className={
+              {!examAutomation && (
+                <Button
+                  variant="glass"
+                  size="lg"
+                  onClick={startListening}
+                  disabled={isListening || isPlaying}
+                  className={
                   `${isListening ? 'animate-pulse bg-accent/30' : 'text-primary font-semibold'} min-w-[140px] text-lg disabled:text-gray-700 disabled:bg-gray-100 disabled:opacity-100`
                 }
                 aria-label={`Start voice recognition to say ${name}`}
@@ -219,19 +267,70 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
                 <Mic className="w-6 h-6" />
                 {isListening ? 'Listening...' : 'Speak Now'}
               </Button>
-            </div>
+            )}
+          </div>
           )}
         </div>
+        {/* ExamAutomation control button */}
+        {examAutomation && (
+          <div className="flex justify-center mt-4">
+            {isPlaying ? (
+              <Button variant="glass" size="lg" disabled className="min-w-[140px] text-lg text-primary font-semibold">
+                <Volume2 className="w-6 h-6 mr-2" />
+                Playing
+              </Button>
+            ) : isListening ? (
+              <Button variant="glass" size="lg" disabled className="min-w-[140px] text-lg text-primary font-semibold animate-pulse bg-accent/30">
+                <Mic className="w-6 h-6 mr-2" />
+                Listening
+              </Button>
+            ) : recognitionResult === 'retry' ? (
+              <>
+                <Button
+                  variant="glass"
+                  size="lg"
+                  onClick={() => {
+                    setRecognitionResult(null);
+                    setAttempts(0);
+                    setProgress(0);
+                    playSound();
+                  }}
+                  className="min-w-[140px] text-lg text-primary font-semibold mr-2"
+                >
+                  <Mic className="w-6 h-6 mr-2" />
+                  Retry
+                </Button>
+                {attempts >= 3 && (
+                  <Button
+                    variant="destructive"
+                    size="lg"
+                    onClick={() => {
+                      if (onResult) onResult('retry');
+                    }}
+                    className="min-w-[100px] text-lg font-semibold"
+                  >
+                    Skip
+                  </Button>
+                )}
+              </>
+            ) : (
+              <Button variant="glass" size="lg" disabled className="min-w-[140px] text-lg text-primary font-semibold">
+                <Volume2 className="w-6 h-6 mr-2" />
+                Waiting...
+              </Button>
+            )}
+          </div>
+        )}
         
         <div id={`${name}-instructions`} className="sr-only">
           Press Play Sound to hear the {name} make a {sound} sound, then press Speak Now and say {name} into your microphone.
         </div>
         
-        {isListening && (
+        {/* {isListening && (
           <div className="text-accent font-semibold animate-pulse">
             🎤 Say "{name}" into your microphone!
           </div>
-        )}
+        )} */}
         
         {recognitionResult === 'success' && (
           <div className="flex items-center justify-center gap-2 text-success font-bold text-lg animate-bounce-gentle">

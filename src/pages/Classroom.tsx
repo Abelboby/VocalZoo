@@ -10,12 +10,12 @@ const Classroom = () => {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center mb-8">
           <Button variant="outline" onClick={() => navigate('/')}>{'<'} Back</Button>
-          <h2 className="text-4xl font-bold text-primary mx-auto">Animal Classroom</h2>
+          <h2 className="text-4xl font-bold text-primary mx-auto">Animal Training Room</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {animals.map((animal, index) => (
             <div key={animal.name} style={{ animationDelay: `${index * 0.1}s` }}>
-              <AnimalCard {...animal} />
+              <AnimalCard {...animal} trainingMode />
             </div>
           ))}
         </div>

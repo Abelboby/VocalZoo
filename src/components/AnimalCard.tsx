@@ -8,9 +8,10 @@ interface AnimalCardProps {
   image?: string;
   emoji: string;
   audio: string;
+  trainingMode?: boolean;
 }
 
-export const AnimalCard = ({ name, sound, emoji, audio }: AnimalCardProps) => {
+export const AnimalCard = ({ name, sound, emoji, audio, trainingMode }: AnimalCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
@@ -22,7 +23,10 @@ export const AnimalCard = ({ name, sound, emoji, audio }: AnimalCardProps) => {
     setRecognitionResult(null);
     // Announce for screen readers first
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance('Guess this animal sound');
+      const announcement = trainingMode
+        ? `This is the ${name} sound`
+        : 'Guess this animal sound';
+      const utterance = new SpeechSynthesisUtterance(announcement);
       utterance.rate = 0.9;
       utterance.onend = () => {
         if (audioRef.current) {

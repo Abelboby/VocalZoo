@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { AnimalCard } from '@/components/AnimalCard';
 import { FeatureCard } from '@/components/FeatureCard';
 import { AccessibilityControls } from '@/components/AccessibilityControls';
-import { Mic, Volume2, Sparkles, Users, Trophy, Heart, Eye, Ear, Brain, Hand } from 'lucide-react';
+import { Mic, Volume2, Sparkles, Users, Trophy, Heart, Eye, Ear, Brain, Hand, GraduationCap, ClipboardList } from 'lucide-react';
 import heroBackground from '@/assets/hero-background.jpg';
 import { animals } from '@/lib/animal_data';
 import { useNavigate } from 'react-router-dom';
@@ -116,17 +116,18 @@ const Index = () => {
                 <p>🎧 Use headphones for the best experience • 🎤 Speak clearly into your microphone</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-              {previewAnimals.map((animal, index) => (
-                <div key={animal.name} style={{ animationDelay: `${index * 0.2}s` }}>
-                  <AnimalCard {...animal} />
-                </div>
-              ))}
-              {/* View More Card */}
-              <div className="glass-card flex flex-col items-center justify-center hover:scale-105 transition-all duration-300 cursor-pointer animate-scale-in" onClick={() => navigate('/classroom')} tabIndex={0} role="button" aria-label="View more animals" onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/classroom'); }}>
-                <div className="text-8xl mb-4">🦓</div>
-                <h3 className="text-2xl font-bold text-primary mb-2">View More</h3>
-                <p className="text-muted-foreground text-lg text-center">See all animals in the classroom</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+              <div className="glass-card flex flex-col items-center justify-center hover:scale-105 transition-all duration-300 cursor-pointer animate-scale-in" onClick={() => navigate('/classroom')} tabIndex={0} role="button" aria-label="Go to Training Room" onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/classroom'); }}>
+                <GraduationCap className="text-primary w-16 h-16 mb-4" />
+                <h3 className="text-2xl font-bold text-primary mb-2">Training Room</h3>
+                <p className="text-muted-foreground text-lg text-center mb-4">Learn animal sounds with guided listening. Accessible for blind students.</p>
+                <Button variant="hero" size="lg">Enter Training Room</Button>
+              </div>
+              <div className="glass-card flex flex-col items-center justify-center hover:scale-105 transition-all duration-300 cursor-pointer animate-scale-in" onClick={() => navigate('/exam')} tabIndex={0} role="button" aria-label="Go to Exam Room" onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/exam'); }}>
+                <ClipboardList className="text-primary w-16 h-16 mb-4" />
+                <h3 className="text-2xl font-bold text-primary mb-2">Exam Room</h3>
+                <p className="text-muted-foreground text-lg text-center mb-4">Test your knowledge by guessing animal sounds. Accessible for blind students.</p>
+                <Button variant="hero" size="lg">Enter Exam Room</Button>
               </div>
             </div>
           </div>

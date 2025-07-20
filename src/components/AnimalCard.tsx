@@ -110,7 +110,10 @@ export const AnimalCard = ({ name, sound, emoji, audio }: AnimalCardProps) => {
               size="lg"
               onClick={startListening}
               disabled={isListening || isPlaying}
-              className={`${isListening ? 'animate-pulse bg-accent/30' : ''} min-w-[140px] text-lg`}
+              className={
+                `${isListening ? 'animate-pulse bg-accent/30' : ''} min-w-[140px] text-lg ` +
+                (isListening || isPlaying ? ' text-gray-700 bg-gray-100 opacity-100' : '')
+              }
               aria-label={`Start voice recognition to say ${name}`}
               aria-describedby={`${name}-listening-status`}
             >

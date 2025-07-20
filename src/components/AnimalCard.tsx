@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, Mic, Check, AlertCircle } from 'lucide-react';
 
@@ -7,26 +7,34 @@ interface AnimalCardProps {
   sound: string;
   image?: string;
   emoji: string;
+  audio: string;
 }
 
-export const AnimalCard = ({ name, sound, emoji }: AnimalCardProps) => {
+export const AnimalCard = ({ name, sound, emoji, audio }: AnimalCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [recognitionResult, setRecognitionResult] = useState<'success' | 'retry' | null>(null);
   const [attempts, setAttempts] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const playSound = () => {
     setIsPlaying(true);
     setRecognitionResult(null);
-    // Announce for screen readers
-    const announcement = `Playing ${name} sound: ${sound}`;
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(announcement);
-      utterance.rate = 0.8;
-      speechSynthesis.speak(utterance);
+    // Play audio file
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
     }
-    setTimeout(() => setIsPlaying(false), 2000);
   };
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    const handleEnded = () => setIsPlaying(false);
+    audioRef.current.addEventListener('ended', handleEnded);
+    return () => {
+      audioRef.current?.removeEventListener('ended', handleEnded);
+    };
+  }, []);
 
   const startListening = () => {
     setIsListening(true);
@@ -66,6 +74,7 @@ export const AnimalCard = ({ name, sound, emoji }: AnimalCardProps) => {
       role="region"
       aria-label={`Learning activity for ${name}`}
     >
+      <audio ref={audioRef} src={audio} preload="auto" />
       <div className="text-center space-y-6">
         <div 
           className="text-8xl animate-bounce-gentle" 

@@ -4,14 +4,12 @@ import { FeatureCard } from '@/components/FeatureCard';
 import { AccessibilityControls } from '@/components/AccessibilityControls';
 import { Mic, Volume2, Sparkles, Users, Trophy, Heart, Eye, Ear, Brain, Hand } from 'lucide-react';
 import heroBackground from '@/assets/hero-background.jpg';
+import { animals } from '@/lib/animal_data';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  const animals = [
-    { name: 'Lion', sound: 'roar', emoji: '🦁' },
-    { name: 'Elephant', sound: 'trumpet', emoji: '🐘' },
-    { name: 'Monkey', sound: 'chatter', emoji: '🐵' },
-    { name: 'Cow', sound: 'moo', emoji: '🐄' },
-  ];
+  const navigate = useNavigate();
+  const previewAnimals = animals.slice(0, 4);
 
   const features = [
     {
@@ -118,16 +116,21 @@ const Index = () => {
                 <p>🎧 Use headphones for the best experience • 🎤 Speak clearly into your microphone</p>
               </div>
             </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {animals.map((animal, index) => (
-              <div key={animal.name} style={{ animationDelay: `${index * 0.2}s` }}>
-                <AnimalCard {...animal} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+              {previewAnimals.map((animal, index) => (
+                <div key={animal.name} style={{ animationDelay: `${index * 0.2}s` }}>
+                  <AnimalCard {...animal} />
+                </div>
+              ))}
+              {/* View More Card */}
+              <div className="glass-card flex flex-col items-center justify-center hover:scale-105 transition-all duration-300 cursor-pointer animate-scale-in" onClick={() => navigate('/classroom')} tabIndex={0} role="button" aria-label="View more animals" onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/classroom'); }}>
+                <div className="text-8xl mb-4">🦓</div>
+                <h3 className="text-2xl font-bold text-primary mb-2">View More</h3>
+                <p className="text-muted-foreground text-lg text-center">See all animals in the classroom</p>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Features Section */}
       <section className="py-20 px-6 bg-gradient-to-br from-purple-50 to-blue-50">

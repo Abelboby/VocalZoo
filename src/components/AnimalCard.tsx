@@ -88,32 +88,68 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
     setIsListening(true);
     setRecognitionResult(null);
     setAttempts(prev => prev + 1);
-    
+
     // Announce for screen readers
-    const announcement = `Listening for you to say ${name}. Speak clearly into your microphone.`;
+    const announcement = 'Guess the animal sound.';
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(announcement);
       utterance.rate = 0.8;
       speechSynthesis.speak(utterance);
     }
-    
-    // Simulate voice recognition with random success
-    setTimeout(() => {
+
+    // Web Speech API setup
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
       setIsListening(false);
-      const success = Math.random() > 0.3; // 70% success rate
+      setRecognitionResult('retry');
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance('Speech recognition is not supported in this browser.');
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event: any) => {
+      setIsListening(false);
+      const transcript = event.results[0][0].transcript.trim().toLowerCase();
+      const animalName = name.trim().toLowerCase();
+      const success = transcript.includes(animalName);
       setRecognitionResult(success ? 'success' : 'retry');
-      
       // Audio feedback
-      const feedback = success ? 
-        `Great job! You said ${name} correctly!` : 
-        `Try again! Listen to the ${name} sound and repeat the name clearly.`;
-      
+      const feedback = success
+        ? `Great job! You said ${name} correctly!`
+        : `Try again! Listen to the ${name} sound and repeat the name clearly.`;
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(feedback);
         utterance.rate = 0.8;
         speechSynthesis.speak(utterance);
       }
-    }, 3000);
+    };
+    recognition.onerror = (event: any) => {
+      setIsListening(false);
+      setRecognitionResult('retry');
+      let errorMsg = 'Error occurred during speech recognition.';
+      if (event.error === 'not-allowed') {
+        errorMsg = 'Microphone access denied. Please allow microphone permissions.';
+      } else if (event.error === 'no-speech') {
+        errorMsg = 'No speech detected. Please try again.';
+      }
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(errorMsg);
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    };
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+    recognition.start();
   };
 
   // Use progressOverride if provided (slideshow mode)

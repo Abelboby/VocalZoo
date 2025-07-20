@@ -144,7 +144,7 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
       const animalName = name.trim().toLowerCase();
       const success = transcript.includes(animalName);
       // If 3rd attempt and user says 'next', skip
-      if (examAutomation && attempts >= 3 && transcript.includes('next')) {
+      if (examAutomation && attempts >= 2 && transcript.includes('next')) {
         if (onResult) onResult('retry');
         return;
       }
@@ -153,7 +153,7 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
       // Audio feedback
       const feedback = success
         ? `Great job! You said ${name} correctly!`
-        : ``;
+        : `Try again!`;
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(feedback);
         utterance.rate = 0.8;

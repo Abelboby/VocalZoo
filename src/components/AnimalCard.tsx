@@ -52,7 +52,7 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
     if ('speechSynthesis' in window) {
       const announcement = trainingMode
         ? `This is the ${name} sound`
-        : 'Guess this animal sound';
+        : '';
       const utterance = new SpeechSynthesisUtterance(announcement);
       utterance.rate = 0.9;
       utterance.onend = () => {

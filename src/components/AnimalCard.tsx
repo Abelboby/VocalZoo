@@ -149,7 +149,7 @@ export const AnimalCard = ({ name, sound, emoji, audio, trainingMode, autoPlay, 
         return;
       }
       setRecognitionResult(success ? 'success' : 'retry');
-      if (onResult) onResult(success ? 'success' : 'retry');
+      if (success && onResult) onResult('success');
       // Audio feedback
       const feedback = success
         ? `Great job! You said ${name} correctly!`

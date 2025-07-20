@@ -20,10 +20,23 @@ export const AnimalCard = ({ name, sound, emoji, audio }: AnimalCardProps) => {
   const playSound = () => {
     setIsPlaying(true);
     setRecognitionResult(null);
-    // Play audio file
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
+    // Announce for screen readers first
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance('Guess this animal sound');
+      utterance.rate = 0.9;
+      utterance.onend = () => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play();
+        }
+      };
+      speechSynthesis.speak(utterance);
+    } else {
+      // Fallback: just play audio
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
     }
   };
 

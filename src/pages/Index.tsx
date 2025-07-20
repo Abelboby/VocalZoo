@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { AnimalCard } from '@/components/AnimalCard';
 import { FeatureCard } from '@/components/FeatureCard';
-import { Mic, Volume2, Sparkles, Users, Trophy, Heart } from 'lucide-react';
+import { AccessibilityControls } from '@/components/AccessibilityControls';
+import { Mic, Volume2, Sparkles, Users, Trophy, Heart, Eye, Ear, Brain, Hand } from 'lucide-react';
 import heroBackground from '@/assets/hero-background.jpg';
 
 const Index = () => {
@@ -14,33 +15,42 @@ const Index = () => {
 
   const features = [
     {
-      icon: Mic,
-      title: 'Voice Recognition',
-      description: 'Advanced voice technology that understands children\'s speech patterns and accents.',
+      icon: Eye,
+      title: 'Visual Accessibility',
+      description: 'High contrast mode, large text options, and screen reader support for visually impaired children.',
       gradient: 'bg-gradient-primary'
     },
     {
-      icon: Volume2,
-      title: 'Rich Audio Library',
-      description: 'High-quality animal sounds and interactive audio cues for immersive learning.',
+      icon: Ear,
+      title: 'Audio-First Design',
+      description: 'Rich audio cues, sound descriptions, and vibration feedback for hearing impaired children.',
       gradient: 'bg-gradient-secondary'
     },
     {
-      icon: Sparkles,
-      title: 'Magical Learning',
-      description: 'Gamified experience with rewards, achievements, and delightful animations.',
+      icon: Brain,
+      title: 'Cognitive Support',
+      description: 'Simple instructions, predictable patterns, and repetition-friendly for children with learning differences.',
       gradient: 'bg-gradient-primary'
     },
     {
-      icon: Users,
-      title: 'Family Friendly',
-      description: 'Safe, educational content designed specifically for children aged 3-10.',
+      icon: Hand,
+      title: 'Motor Accessibility',
+      description: 'Large touch targets, keyboard navigation, and voice control for children with motor impairments.',
       gradient: 'bg-gradient-secondary'
     },
   ];
 
   return (
     <div className="min-h-screen">
+      {/* Skip Navigation */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded"
+      >
+        Skip to main content
+      </a>
+      
+      <AccessibilityControls />
       {/* Hero Section */}
       <section 
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
@@ -60,9 +70,9 @@ const Index = () => {
           </div>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-            An interactive audio adventure where children learn by listening and speaking!
+            An inclusive audio adventure designed for ALL children to learn and play together!
             <br />
-            🎵 Hear the sound, say the animal, and watch the magic happen! ✨
+            🌟 Accessible • Voice-First • Screen Reader Friendly • Fun for Everyone! 🌟
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -94,17 +104,20 @@ const Index = () => {
       </section>
 
       {/* Demo Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-primary mb-6">
-              Try Our Animals!
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Click to hear each animal's sound, then speak their name into your microphone. 
-              Perfect your pronunciation and learn new animals!
-            </p>
-          </div>
+      <main id="main-content">
+        <section className="py-20 px-6" aria-label="Animal Learning Activities">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl font-bold text-primary mb-6">
+                Interactive Animal Learning
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Each animal card helps children learn through listening and speaking. Accessible for screen readers, keyboard navigation, and voice control.
+              </p>
+              <div className="mt-4 text-sm text-muted-foreground">
+                <p>🎧 Use headphones for the best experience • 🎤 Speak clearly into your microphone</p>
+              </div>
+            </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {animals.map((animal, index) => (
@@ -121,10 +134,10 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-primary mb-6">
-              Why Kids Love Vocal Zoo
+              Inclusive Learning for Every Child
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Educational technology that makes learning fun, interactive, and magical!
+              Designed with accessibility at its core, ensuring every child can participate, learn, and have fun together!
             </p>
           </div>
 
@@ -168,6 +181,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      </main>
     </div>
   );
 };

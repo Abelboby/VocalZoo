@@ -190,3 +190,48 @@ All colors MUST be HSL.
   0% { transform: scale(0.9); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* Accessibility Modes */
+.high-contrast {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --primary: 220 100% 30%;
+  --secondary: 0 0% 20%;
+  --muted: 0 0% 90%;
+  --muted-foreground: 0 0% 10%;
+  --accent: 45 100% 40%;
+  --border: 0 0% 0%;
+}
+
+.large-text {
+  font-size: 120% !important;
+}
+
+.large-text h1 {
+  font-size: 4rem !important;
+}
+
+.large-text h2 {
+  font-size: 3rem !important;
+}
+
+.large-text h3 {
+  font-size: 2rem !important;
+}
+
+.large-text p, .large-text button {
+  font-size: 1.25rem !important;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

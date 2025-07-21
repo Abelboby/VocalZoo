@@ -1,73 +1,125 @@
-# Welcome to your Lovable project
+# 🦁 Vocal Zoo
 
-## Project info
+**An inclusive, audio-first adventure for ALL children to learn and play together!**
 
-**URL**: https://lovable.dev/projects/7ff3b686-f55b-466f-8871-b8f74790e97a
+[![Vite](https://img.shields.io/badge/Vite-React-blueviolet?logo=vite&logoColor=white)](https://vitejs.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-React-blue?logo=typescript)](https://www.typescriptlang.org/) [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?logo=tailwindcss)](https://tailwindcss.com/) [![Accessibility](https://img.shields.io/badge/Accessibility-AA-green?logo=accessibility)](#accessibility)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Live Demo
 
-**Use Lovable**
+Visit the app live at: [vocal-zoo.vercel.app](https://vocal-zoo.vercel.app)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7ff3b686-f55b-466f-8871-b8f74790e97a) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🎬 Demo Video
 
-**Use your preferred IDE**
+[![Watch the Demo](https://img.shields.io/badge/Watch%20Demo-Click%20Here-orange?logo=youtube)](https://drive.google.com/file/d/1KGaoE80rC42B2TVyAgFIVLvbMrlHBVrb/view?usp=sharing)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🌟 What is Vocal Zoo?
 
-Follow these steps:
+Vocal Zoo is a playful, accessible web app where children of all abilities can learn animal sounds, test their knowledge, and have fun—together! Designed with **universal accessibility** in mind, it features:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Visual Accessibility:** High contrast, large text, and screen reader support
+- **Audio-First Design:** Rich sound cues, descriptions, and vibration feedback
+- **Cognitive Support:** Simple instructions, repetition, and predictable patterns
+- **Motor Accessibility:** Large touch targets, keyboard navigation, and voice control
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🖼️ Screenshots
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### Homepage
+![Homepage](./screenshots/homepage.png)
 
-**Edit a file directly in GitHub**
+### Choose Training or Exam
+![Choose: Training or Exam](./screenshots/shows_two_options_traingorexam.png)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Animal Training Room
+![Animal Training Room](./screenshots/animal_training_room.png)
 
-**Use GitHub Codespaces**
+### Animal Training Room (Slideshow)
+![Animal Training Room Slideshow](./screenshots/animal_training_room_slideshow.png)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Animal Exam Room
+![Animal Exam Room](./screenshots/animal_exma_room.png)
 
-## What technologies are used for this project?
+### Animal Exam Room (Slideshow)
+![Animal Exam Room Slideshow](./screenshots/animl_exam_room_slideshow.png)
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🚀 Features
 
-## How can I deploy this project?
+- **Interactive Animal Learning:**
+  - Training Room: Learn animal sounds with guided listening
+  - Exam Room: Test your knowledge by guessing animal sounds
+- **Accessibility Controls:**
+  - Toggle high contrast, large text, and sound modes
+- **Fun, Glassy Design:**
+  - Playful UI, animated emojis, and vibrant gradients
+- **No Download Required:**
+  - 100% web-based, safe for kids, and privacy-friendly
 
-Simply open [Lovable](https://lovable.dev/projects/7ff3b686-f55b-466f-8871-b8f74790e97a) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 🛠️ Tech Stack
 
-Yes, you can!
+- [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- [React Router](https://reactrouter.com/)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🧑‍💻 Getting Started
+
+**GitHub Repository:** [https://github.com/Abelboby/VocalZoo](https://github.com/Abelboby/VocalZoo)
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/Abelboby/VocalZoo.git
+   cd VocalZoo
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Run the development server:**
+   ```sh
+   npm run dev
+   ```
+4. **Open in your browser:**
+   Visit [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 👥 Contributors
+
+- [Abel Boby](https://github.com/Abelboby)
+- [Parthav Povil](https://github.com/parthavpovil)
+- [Adwaith Jayasankar](https://github.com/kichuman28)
+- [Haris Peter](https://github.com/haris-peter)
+
+---
+
+## ♿ Accessibility
+
+Vocal Zoo is built for **ALL** children:
+- Screen reader friendly
+- Keyboard and voice navigation
+- High contrast and large text modes
+- Simple, predictable, and fun for everyone
+
+---
+
+## 📢 Contributing
+
+We welcome contributions that make Vocal Zoo even more fun and accessible! Please open issues or pull requests.
+
+---
+
+## 📄 License
+
+MIT License. See [LICENSE](LICENSE) for details.
